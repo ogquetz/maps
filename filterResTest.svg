@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.0//EN' 'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+
+
+<svg contentScriptType="text/ecmascript" zoomAndPan="magnify"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:svg="http://www.w3.org/2000/svg" contentStyleType="text/css"
+     id="svg1302"
+     version="1.1" width="12in"
+     preserveAspectRatio="xMidYMid meet"
+     height="6in" xmlns="http://www.w3.org/2000/svg"
+     viewBox="500 150 120 60">
+
+     <defs>
+       <pattern width="2" xmlns:xlink="http://www.w3.org/1999/xlink"
+                patternUnits="userSpaceOnUse" xlink:type="simple"
+                xlink:actuate="onLoad" height="2"
+                patternTransform="translate(0,0) scale(20,20)"
+                id="Checkerboard" preserveAspectRatio="xMidYMid meet"
+                xlink:show="other">
+           <rect x="0" width="1" id="rect2197" y="0" height="1"
+                 style="fill:black;stroke:none"/>
+           <rect x="1" width="1" id="rect2199" y="1" height="1"
+                 style="fill:black;stroke:none"/>
+       </pattern>
+       <filter x="-0.1" y="-0.1" width="1.2"
+               xmlns:xlink="http://www.w3.org/1999/xlink"
+               filterUnits="objectBoundingBox" xlink:type="simple"
+               xlink:actuate="onLoad" id="filter-motion-base-noise" height="1.2"
+               xlink:show="other">
+           <feTurbulence type="fractalNoise" color-interpolation-filters="sRGB"
+                         numOctaves="7" result="fpr1" id="feTurbulence1049"
+                         baseFrequency="0.005" seed="1"/>
+           <feColorMatrix values=
+             "-1.5 -0.6  0.4  0.0  1.5
+               0.0  0.0  0.0  0.0  0.0
+              -1.5  0.4 -0.6  0.0  1.5
+               0.0  0.0  0.0  0.0  1.0"
+              id="feColorMatrix1051" type="matrix"
+              color-interpolation-filters="sRGB" result="fpr2"/>
+       </filter>
+
+       <!--
+   Plate boundary: divergence - west
+   -->
+       <filter x="-0.1" y="-0.1" width="1.2"
+               xmlns:xlink="http://www.w3.org/1999/xlink"
+               filterUnits="objectBoundingBox" filterRes="1200" xlink:type="simple"
+               xlink:actuate="onLoad" id="filter-motion-w" height="1.2"
+               xlink:show="other">
+           <feColorMatrix values="1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0"
+                          id="feColorMatrix1072" type="matrix"
+                          color-interpolation-filters="sRGB" result="fpr1"
+                          in="SourceGraphic"/>
+           <!-- Apache Batik does not support preserveAlpha="true" in
+           feConvolveMatrix -->
+           <!-- Gapplin (Webkit) does not support preserveAlpha="false" -->
+           <feConvolveMatrix kernelUnitLength="1" edgeMode="duplicate"
+                             preserveAlpha="false" id="feConvolveMatrix1074"
+                             kernelMatrix="-3 0 3 -10 0 10 -3 0 3" in="fpr1"
+                             order="3" result="fpr2" targetX="1" bias="0"
+                             targetY="1" color-interpolation-filters="sRGB"
+                             divisor="1"/>
+           <!-- <feColorMatrix values="1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1
+           0" type="matrix" result="fpr3" color-interpolation-filters="sRGB"/>
+           -->
+           <feComposite operator="in" in2="fpr2" id="feComposite1076"
+                        color-interpolation-filters="sRGB" result="fpr4"
+                        in="SourceGraphic"/>
+           <feColorMatrix values="0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 0"
+                          id="feColorMatrix1078" type="matrix"
+                          color-interpolation-filters="sRGB" result="fpr5"/>
+           <feComponentTransfer result="fpr6"
+                                color-interpolation-filters="sRGB"
+                                id="feComponentTransfer1082">
+               <feFuncG tableValues="0.5 1 0 1 0.5" type="table"
+                        id="feFuncG1080"/>
+           </feComponentTransfer>
+           <feComponentTransfer result="fpr7"
+                                color-interpolation-filters="sRGB"
+                                id="feComponentTransfer1086">
+               <feFuncG amplitude="1" id="feFuncG1084" exponent="1"
+                        type="gamma" offset="0"/>
+           </feComponentTransfer>
+           <!-- <feGaussianBlur stdDeviation="1" result="fpr7" /> -->
+       </filter>
+       <!--
+   Plate boundary:  divergence - vertical
+   -->
+       <filter x="-0.1" y="-0.1" width="1.2"
+               xmlns:xlink="http://www.w3.org/1999/xlink"
+               filterUnits="objectBoundingBox" filterRes="1200" xlink:type="simple"
+               xlink:actuate="onLoad" id="filter-motion-s" height="1.2"
+               xlink:show="other">
+           <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 0 0"
+                          id="feColorMatrix1089" type="matrix"
+                          color-interpolation-filters="sRGB" result="fpr1"
+                          in="SourceGraphic"/>
+           <!-- Apache Batik does not support preserveAlpha="true" in
+           feConvolveMatrix -->
+           <!-- Gapplin (Webkit) does not support preserveAlpha="false" -->
+           <feConvolveMatrix kernelUnitLength="1" edgeMode="duplicate"
+                             preserveAlpha="false" id="feConvolveMatrix1091"
+                             kernelMatrix="-3 -10 -3 0 0 0 3 10 3" in="fpr1"
+                             order="3" result="fpr2" targetX="1" bias="0"
+                             targetY="1" color-interpolation-filters="sRGB"
+                             divisor="1"/>
+           <!-- <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1
+           0" type="matrix" result="fpr3" color-interpolation-filters="sRGB"/>
+           -->
+           <feComposite operator="in" in2="fpr2" id="feComposite1093"
+                        color-interpolation-filters="sRGB" result="fpr4"
+                        in="SourceGraphic"/>
+           <feColorMatrix values="0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0"
+                          id="feColorMatrix1095" type="matrix"
+                          color-interpolation-filters="sRGB" result="fpr5"/>
+           <feComponentTransfer result="fpr6"
+                                color-interpolation-filters="sRGB"
+                                id="feComponentTransfer1099">
+               <feFuncG tableValues="0.5 1 0 1 0.5" type="table"
+                        id="feFuncG1097"/>
+           </feComponentTransfer>
+           <feComponentTransfer result="fpr7"
+                                color-interpolation-filters="sRGB"
+                                id="feComponentTransfer1103">
+               <feFuncG amplitude="1" id="feFuncG1101" exponent="1"
+                        type="gamma" offset="0"/>
+           </feComponentTransfer>
+           <!-- <feGaussianBlur stdDeviation="1" result="fpr7" /> -->
+       </filter>
+       <!--
+   Plate boundary: convergence - horizontal
+    -->
+       <filter x="-0.1" y="-0.1" width="1.2"
+               xmlns:xlink="http://www.w3.org/1999/xlink"
+               filterUnits="objectBoundingBox" xlink:type="simple"
+               xlink:actuate="onLoad" id="filter-motion-e" height="1.2"
+               xlink:show="other">
+           <feColorMatrix values="1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0"
+                          id="feColorMatrix1106" type="matrix"
+                          color-interpolation-filters="sRGB" result="fpr1"
+                          in="SourceGraphic"/>
+           <!-- Apache Batik does not support preserveAlpha="true" in
+           feConvolveMatrix -->
+           <!-- Gapplin (Webkit) does not support preserveAlpha="false" -->
+           <feConvolveMatrix kernelUnitLength="1" edgeMode="duplicate"
+                             preserveAlpha="false" id="feConvolveMatrix1108"
+                             kernelMatrix="3 0 -3 10 0 -10 3 0 -3" in="fpr1"
+                             order="3" result="fpr2" targetX="1" bias="0"
+                             targetY="1" color-interpolation-filters="sRGB"
+                             divisor="1"/>
+           <!-- <feColorMatrix values="1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1
+           0" type="matrix" result="fpr3" color-interpolation-filters="sRGB"/>
+           -->
+           <feComposite operator="in" in2="fpr2" id="feComposite1110"
+                        color-interpolation-filters="sRGB" result="fpr5"
+                        in="SourceGraphic"/>
+           <feColorMatrix values="0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 0"
+                          id="feColorMatrix1112" type="matrix"
+                          color-interpolation-filters="sRGB" result="fpr6"/>
+           <feComponentTransfer result="fpr7"
+                                color-interpolation-filters="sRGB"
+                                id="feComponentTransfer1116">
+               <feFuncG tableValues="0 1 0" type="table" id="feFuncG1114"/>
+           </feComponentTransfer>
+           <feComponentTransfer result="fpr8"
+                                color-interpolation-filters="sRGB"
+                                id="feComponentTransfer1120">
+               <feFuncG amplitude="2" id="feFuncG1118" exponent="1"
+                        type="gamma" offset="0"/>
+           </feComponentTransfer>
+           <!-- <feGaussianBlur stdDeviation="1" result="fpr4" /> -->
+       </filter>
+       <!--
+    Plate boundary: convergence - vertical
+     -->
+       <filter x="-0.1" y="-0.1" width="1.2"
+               xmlns:xlink="http://www.w3.org/1999/xlink"
+               filterUnits="objectBoundingBox" xlink:type="simple"
+               xlink:actuate="onLoad" id="filter-motion-n" height="1.2"
+               xlink:show="other">
+           <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 0 0"
+                          id="feColorMatrix1123" type="matrix"
+                          color-interpolation-filters="sRGB" result="fpr1"
+                          in="SourceGraphic"/>
+           <!-- Apache Batik does not support preserveAlpha="true" in
+           feConvolveMatrix -->
+           <!-- Gapplin (Webkit) does not support preserveAlpha="false" -->
+           <feConvolveMatrix kernelUnitLength="1" edgeMode="duplicate"
+                             preserveAlpha="false" id="feConvolveMatrix1125"
+                             kernelMatrix="3 10 3 0 0 0 -3 -10 -3" in="fpr1"
+                             order="3" result="fpr2" targetX="1" bias="0"
+                             targetY="1" color-interpolation-filters="sRGB"
+                             divisor="1"/>
+           <!-- <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1
+           0" type="matrix" result="fpr3" color-interpolation-filters="sRGB"/>
+           -->
+           <feComposite operator="in" in2="fpr2" id="feComposite1127"
+                        color-interpolation-filters="sRGB" result="fpr4"
+                        in="SourceGraphic"/>
+           <feColorMatrix values="0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0"
+                          id="feColorMatrix1129" type="matrix"
+                          color-interpolation-filters="sRGB" result="fpr6"/>
+           <feComponentTransfer result="fpr7"
+                                color-interpolation-filters="sRGB"
+                                id="feComponentTransfer1133">
+               <feFuncG tableValues="0 1 0" type="table" id="feFuncG1131"/>
+           </feComponentTransfer>
+           <feComponentTransfer result="fpr8"
+                                color-interpolation-filters="sRGB"
+                                id="feComponentTransfer1137">
+               <feFuncG amplitude="2" id="feFuncG1135" exponent="1"
+                        type="gamma" offset="0"/>
+           </feComponentTransfer>
+           <!-- <feGaussianBlur stdDeviation="1" result="fpr4" /> -->
+       </filter>
+
+       <circle fill="#CC0F16" id="marker" r="30" cx="450" cy="150"/>
+       <rect x="0" y="0" fill="none" width="1200" id="frame" height="600" stroke="#ff0000" stroke-width="3pt"/>
+       <rect x="0" y="0" fill="url(#Checkerboard)" width="1200" filter="url(#filter-mass-base)" id="pane-mass-base" height="600"/>
+       <rect x="0" y="0" fill="url(#Checkerboard)" width="1200" filter="url(#filter-motion-base-noise)" id="pane-motion-base" height="600"/>
+       <rect x="0" width="1200" id="pane-motion-check" height="600" y="0" style="display:inline;opacity:0.5;fill:url(#Checkerboard)"/>
+       <rect x="0" fill="url(#elevationScaleGradient)" width="400" id="elevation-scale" y="0" height="25"/>
+       <g id="pane-motion-edges">
+           <g id="pane-motion-divergence">
+               <use xlink:href="#pane-motion-base" filter="url(#filter-motion-w)"/>
+               <use xlink:href="#pane-motion-base" filter="url(#filter-motion-s)"/>
+           </g>
+           <g id="pane-motion-convergence">
+               <use xlink:href="#pane-motion-base" filter="url(#filter-motion-e)"/>
+               <use xlink:href="#pane-motion-base" filter="url(#filter-motion-n)"/>
+           </g>
+       </g>
+
+     </defs>
+    <use xlink:href="#pane-motion-divergence"/>
+    <use xlink:href="#marker" x="50" y="50"/>
+</svg>

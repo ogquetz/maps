@@ -1,0 +1,4 @@
+@media print {
+  resolution: 300dpi;
+  svg {width: 11in;}
+}
