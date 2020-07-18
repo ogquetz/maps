@@ -3,35 +3,35 @@
 
 
 <svg contentScriptType="text/ecmascript" zoomAndPan="magnify"
+     version="1.1" width="12in" height="6in"
+     preserveAspectRatio="xMidYMid meet"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:xlink="http://www.w3.org/1999/xlink"
      xmlns:svg="http://www.w3.org/2000/svg" contentStyleType="text/css"
-     id="svg1302" sodipodi:docname="landscape-filters-nsew-rebuild.svg"
-     version="1.1" width="12in"
      xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
      xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
      xmlns:dc="http://purl.org/dc/elements/1.1/"
      xmlns:cc="http://creativecommons.org/ns#"
-     xml:base="file:/Users/peter/Documents/maps/landscape-filters-nsew-mass2levels.svg"
-     preserveAspectRatio="xMidYMid meet"
      inkscape:version="1.0 (4035a4f, 2020-05-01)"
-     height="6in" xmlns="http://www.w3.org/2000/svg"
+     xmlns="http://www.w3.org/2000/svg"
      viewBox="0 0 2700 1400">
      <!-- viewBox="0 0 1200 600"> -->
      <!-- viewBox="1500 0 1200 600"> -->
 
     <defs id="defs1264">
       <!-- <style>
-        @import url(style-print.css);
-        @import url(style-screen.css);
+        @import url(print.css);
+        @import url(screen.css);
       </style> -->
     <!--
     Utility gradients and patterns
     -->
-        <linearGradient x1="0" x2="1" y1="0" y2="0" id="elevationScaleGradient">
+        <linearGradient x1="0" x2="1" y1="0" y2="0" id="black-green">
             <stop offset="0" stop-color="rgb(0,0,0)" id="stop12"/>
             <stop offset="1" stop-color="rgb(0,255,0)" id="stop14"/>
         </linearGradient>
+
+
         <pattern width="2" height="2" patternUnits="userSpaceOnUse" patternTransform="translate(0,0) scale(20,20)" id="Checkerboard" preserveAspectRatio="xMidYMid meet">
             <rect x="0" width="1" id="rect2197" y="0" height="1" style="fill:black;stroke:none"/>
             <rect x="1" width="1" id="rect2199" y="1" height="1" style="fill:black;stroke:none"/>
@@ -39,9 +39,8 @@
         <!--
     Base turbulence patterns: mass
     -->
-        <filter xlink:actuate="onLoad" xlink:type="simple" id="filter-mass-base"
-                xlink:show="other" xmlns:xlink="http://www.w3.org/1999/xlink">
-            <feTurbulence type="fractalNoise" color-interpolation-filters="sRGB" numOctaves="7" result="fpr1" id="feTurbulence1036" baseFrequency="0.004" seed="0"/>
+        <filter id="filter-mass-base" x="-0.1" y="-0.1" width="1.2" height="1.2">
+            <feTurbulence type="fractalNoise" color-interpolation-filters="sRGB" numOctaves="5" result="fpr1" id="feTurbulence1036" baseFrequency="0.004" seed="0"/>
 
             <feComponentTransfer id="feComponentTransfer1042" color-interpolation-filters="sRGB" result="mass-ratio-base" >
                 <feFuncG amplitude="1" offset="0.2" exponent="2" type="gamma"/>
@@ -78,20 +77,17 @@
               <feMergeNode in="mass-ocean"/>
               <feMergeNode in="mass-land"/>
             </feMerge>
-            <feColorMatrix values="0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1" type="matrix" color-interpolation-filters="sRGB"/>
+            <feColorMatrix values="0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1" type="matrix" color-interpolation-filters="sRGB" result="mass-world"/>
+
+            <feImage xlink:href="#seams" result="seams" x="0" y="0" color-interpolation-filters="sRGB" />
+            <feBlend in="mass-world" in2="seams" mode="multiply" color-interpolation-filters="sRGB"/>
 
         </filter>
         <!--
     Base turbulence patterns: motion - general
     -->
-        <filter x="-0.1" y="-0.1" width="1.2"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                filterUnits="objectBoundingBox" xlink:type="simple"
-                xlink:actuate="onLoad" id="filter-motion-base" height="1.2"
-                xlink:show="other">
-            <feTurbulence type="turbulence" color-interpolation-filters="sRGB"
-                          numOctaves="5" result="fpr1" id="feTurbulence1049"
-                          baseFrequency="0.004" seed="0"/>
+    <filter id="filter-motion-base" x="-0.1" y="-0.1" width="1.2" height="1.2">
+            <feTurbulence type="turbulence" color-interpolation-filters="sRGB" numOctaves="5" result="fpr1" id="feTurbulence1049" baseFrequency="0.004" seed="0"/>
             <feColorMatrix values=
               "-1.5 -0.5  0.5  0.0  1.0
                 0.0  0.0  0.0  0.0  0.0
@@ -101,7 +97,7 @@
                color-interpolation-filters="sRGB" result="fpr2"/>
         </filter>
 
-        <filter x="-0.1" y="-0.1" width="1.2" filterUnits="objectBoundingBox" id="filter-motion-base-noise" height="1.2">
+        <filter id="filter-motion-base-noise" x="-0.1" y="-0.1" width="1.2" height="1.2">
             <feTurbulence type="fractalNoise" color-interpolation-filters="sRGB" numOctaves="7" result="fpr1" baseFrequency="0.005" seed="1"/>
             <feColorMatrix values=
               "-1.5 -0.6  0.4  0.0  1.5
@@ -197,7 +193,7 @@
             feConvolveMatrix -->
             <!-- Gapplin (Webkit) does not support preserveAlpha="false" -->
             <feConvolveMatrix kernelUnitLength="1" edgeMode="duplicate"
-                              preserveAlpha="false" id="feConvolveMatrix1091"
+                            preserveAlpha="false" id="feConvolveMatrix1091"
                               kernelMatrix="-3 -10 -3 0 0 0 3 10 3" in="fpr1"
                               order="3" result="fpr2" targetX="1" bias="0"
                               targetY="1" color-interpolation-filters="sRGB"
@@ -355,7 +351,7 @@
             <feDisplacementMap xChannelSelector="R"
                                color-interpolation-filters="sRGB"
                                yChannelSelector="B" result="fpr2"
-                               in="SourceGraphic" scale="50"
+                               in="SourceGraphic" scale="0"
                                id="feDisplacementMap1156" in2="fpr1"/>
             <!-- <feGaussianBlur stdDeviation="0.5" result="surfaceBlur" /> -->
         </filter>
@@ -523,29 +519,68 @@
                            color-interpolation-filters="sRGB" result="fpr1"
                            in="SourceGraphic"/>
         </filter>
-        <!-- Utility pieces: 1. Markers 2. Panes for the various filters -->
+        <!--
+        Utility pieces: 1. Markers 2. Panes for the various filters
+        -->
+
+        <!-- Circle marker -->
         <circle fill="#CC0F16" id="marker" r="30" cx="450" cy="150"/>
+
+        <!-- Frame for referencing screen boundaries -->
         <rect x="0" y="0" fill="none" width="1200" id="frame" height="600" stroke="#ff0000" stroke-width="3pt"/>
-        <rect x="0" y="0" fill="url(#Checkerboard)" width="1200" filter="url(#filter-mass-base)" id="pane-mass-base" height="600"/>
-        <rect x="0" y="0" fill="url(#Checkerboard)" width="1200" filter="url(#filter-motion-base-noise)" id="pane-motion-base" height="600"/>
-        <rect x="0" width="1200" id="pane-motion-check" height="600" y="0" style="display:inline;opacity:0.5;fill:url(#Checkerboard)"/>
-        <rect x="0" fill="url(#elevationScaleGradient)" width="400" id="elevation-scale" y="0" height="25"/>
+
+        <!-- Gradients for seam coverings -->
+        <linearGradient x1="0.5" x2="1" y1="0" y2="0" spreadMethod="pad" id="seam-base">
+            <stop offset="0" stop-color="rgb(0,0,0)" stop-opacity="1"/>
+            <stop offset="1" stop-color="rgb(0,200,0)" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient x1="0.5" x2="1" y1="0" y2="0" spreadMethod="pad" id="map-left-edge" xlink:href="#seam-base"/>
+        <linearGradient x1="0.5" x2="0" y1="0" y2="0" spreadMethod="pad" id="map-right-edge" xlink:href="#seam-base"/>
+        <linearGradient x1="0" x2="0" y1="0.5" y2="1" spreadMethod="pad" id="map-top" xlink:href="#seam-base"/>
+        <linearGradient x1="0" x2="0" y1="0.5" y2="0" spreadMethod="pad" id="map-bottom" xlink:href="#seam-base"/>
+        <g id="seams">
+          <rect x="-100" y="0" width="200" height="800" fill="url(#map-left-edge)"/>
+          <rect x="1100" y="0" width="200" height="800" fill="url(#map-right-edge)"/>
+          <rect x="-100" y="-100" width="1400" height="200" fill="url(#map-top)"/>
+          <rect x="-100" y="500" width="1400" height="200" fill="url(#map-bottom)"/>
+        </g>
+
+
+        <!-- Mass base pane -->
+        <g id="pane-mass-base">
+          <rect x="0" y="0" fill="url(#Checkerboard)" width="1200" filter="url(#filter-mass-base)" height="600"/>
+        </g>
+
+        <!-- Motion base pane -->
+        <g id="pane-motion-base" >
+          <rect x="0" y="0" fill="url(#Checkerboard)" width="1200" filter="url(#filter-motion-base-noise)" height="600"/>
+        </g>
+
+        <!-- Plate divergence zones -->
         <g id="pane-motion-divergence">
             <use xlink:href="#pane-motion-base" filter="url(#filter-motion-w)"/>
             <use xlink:href="#pane-motion-base" filter="url(#filter-motion-s)"/>
         </g>
+
+        <!-- Plate convergence zones -->
         <g id="pane-motion-convergence">
             <use xlink:href="#pane-motion-base" filter="url(#filter-motion-e)"/>
             <use xlink:href="#pane-motion-base" filter="url(#filter-motion-n)"/>
         </g>
+
+        <!-- Plate subduction zones -->
         <g id="pane-mass-subduction" filter="url(#filter-feature-subduction)">
             <use xlink:href="#pane-mass-base"/>
         </g>
 
+        <!-- Plate subduction zones -->
         <g id="pane-feature-overlay" filter="url(#filter-feature-composite)">
           <use xlink:href="#pane-motion-divergence"/>
           <use xlink:href="#pane-mass-subduction"/>
         </g>
+
+        <!-- Elevation scale -->
+        <rect x="0" fill="url(#black-green)" width="20" id="elevation-scale" y="0" height="25"/>
 
     </defs>
 
