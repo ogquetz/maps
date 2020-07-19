@@ -14,9 +14,9 @@
      xmlns:cc="http://creativecommons.org/ns#"
      inkscape:version="1.0 (4035a4f, 2020-05-01)"
      xmlns="http://www.w3.org/2000/svg"
-     viewBox="0 0 2700 1400">
-     <!-- viewBox="0 0 1200 600"> -->
-     <!-- viewBox="1500 0 1200 600"> -->
+     viewBox="0 0 1200 600">
+     <!-- viewBox="0 0 2700 1400"> -->
+     <!-- viewBox="1500 800 1200 600"> -->
 
     <defs id="defs1264">
       <!-- <style>
@@ -324,15 +324,25 @@
         <filter x="-0.1" y="-0.1" width="1.2" height="1.2" id="filter-feature-composite" filterRes="1200">
             <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="feature-blur" color-interpolation-filters="sRGB" />
             <feComposite in="SourceGraphic" in2="feature-blur" operator="atop" k1="1" k2="0" k3="0" k4="0" result="feature-composite"/>
-            <!-- <feBlend in2="feature-composite" mode="screen" color-interpolation-filters="sRGB" in="SourceGraphic" result="feature-raise"/> -->
-            <!-- <feBlend in2="feature-composite" mode="multiply" color-interpolation-filters="sRGB" in="feature-raise" result="feature-lower" /> -->
         </filter>
 
         <!--
         Plate boundary features overlay
         -->
         <filter x="-0.1" y="-0.1" width="1.2" height="1.2" id="filter-feature-overlay">
-            <feImage x="0" y="0" xlink:href="#pane-feature-overlay" color-interpolation-filters="sRGB" result="feature-composite"/>
+            <feImage x="0" y="0" xlink:href="#pane-feature-overlay" color-interpolation-filters="sRGB" result="feature-overlay"/>
+            <feImage xlink:href="#seams" result="seams" x="0" y="0" color-interpolation-filters="sRGB" />
+            <feColorMatrix in="seams" values=
+              "0   0  0  0  0
+               0  -1  0  0  0.5
+               0   0  0  0  0
+               0  -1  0  1  0"
+               type="matrix" color-interpolation-filters="sRGB" result="seams-motion"/>
+             <feMerge result="feature-composite">
+               <feMergeNode in="feature-overlay"/>
+               <feMergeNode in="seams-motion"/>
+             </feMerge>
+
             <feBlend in2="feature-composite" mode="screen" color-interpolation-filters="sRGB" in="SourceGraphic" result="feature-raise"/>
             <feBlend in2="feature-composite" mode="multiply" color-interpolation-filters="sRGB" in="feature-raise" result="feature-lower" />
         </filter>
@@ -348,6 +358,19 @@
                      xmlns:xlink="http://www.w3.org/1999/xlink"
                      xlink:href="#pane-motion-base" xlink:type="simple"
                      xlink:actuate="onLoad" id="feImage1154" xlink:show="embed"/>
+             <feImage xlink:href="#seams" result="seams" x="0" y="0" color-interpolation-filters="sRGB" />
+             <feColorMatrix in="seams" values=
+               "0  -1  0  0  1
+                0   0  0  0  0
+                0  -1  0  0  1
+                0  -1  0  1  0"
+                type="matrix" color-interpolation-filters="sRGB" result="seams-motion"/>
+              <feMerge>
+                <feMergeNode in="fpr1"/>
+                <feMergeNode in="seams-motion"/>
+              </feMerge>
+             <!-- <feBlend in="fpr2" in2="seams-motion" mode="normal" color-interpolation-filters="sRGB"/> -->
+
             <feDisplacementMap xChannelSelector="R"
                                color-interpolation-filters="sRGB"
                                yChannelSelector="B" result="fpr2"
@@ -534,13 +557,13 @@
             <stop offset="0" stop-color="rgb(0,0,0)" stop-opacity="1"/>
             <stop offset="1" stop-color="rgb(0,200,0)" stop-opacity="0"/>
         </linearGradient>
-        <linearGradient x1="0.5" x2="1" y1="0" y2="0" spreadMethod="pad" id="map-left-edge" xlink:href="#seam-base"/>
-        <linearGradient x1="0.5" x2="0" y1="0" y2="0" spreadMethod="pad" id="map-right-edge" xlink:href="#seam-base"/>
+        <linearGradient x1="0.5" x2="1" y1="0" y2="0" spreadMethod="pad" id="map-left" xlink:href="#seam-base"/>
+        <linearGradient x1="0.5" x2="0" y1="0" y2="0" spreadMethod="pad" id="map-right" xlink:href="#seam-base"/>
         <linearGradient x1="0" x2="0" y1="0.5" y2="1" spreadMethod="pad" id="map-top" xlink:href="#seam-base"/>
         <linearGradient x1="0" x2="0" y1="0.5" y2="0" spreadMethod="pad" id="map-bottom" xlink:href="#seam-base"/>
         <g id="seams">
-          <rect x="-100" y="0" width="200" height="800" fill="url(#map-left-edge)"/>
-          <rect x="1100" y="0" width="200" height="800" fill="url(#map-right-edge)"/>
+          <rect x="-100" y="0" width="200" height="800" fill="url(#map-left)"/>
+          <rect x="1100" y="0" width="200" height="800" fill="url(#map-right)"/>
           <rect x="-100" y="-100" width="1400" height="200" fill="url(#map-top)"/>
           <rect x="-100" y="500" width="1400" height="200" fill="url(#map-bottom)"/>
         </g>
