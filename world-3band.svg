@@ -1,0 +1,356 @@
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd" >
+<svg contentScriptType="text/ecmascript" width="1200" height="600" xmlns:xlink="http://www.w3.org/1999/xlink" zoomAndPan="magnify" contentStyleType="text/css"
+     viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" version="1.0">
+    <title>World: 3 Zones</title>
+
+    <style xml:space="preserve" type="text/css">
+    .bg {
+      fill:#000000;
+    }
+
+    .mass {
+      fill:url(#fade-v);
+      display:inline;
+    }
+    .polar .mass {
+      filter:url(#mass-polar);
+    }
+
+    .temperate .mass {
+      filter:url(#mass-temperate);
+    }
+
+    .equatorial .mass {
+      filter:url(#mass-equatorial);
+    }
+
+    .check {
+      fill:url(#Checkerboard);
+      opacity:0.3;
+    }
+
+    .seam {
+      fill:url(#fade-h);
+    }
+
+    #world-mass {
+      filter:url(#filter-world-mass);
+      display:inline;
+    }
+
+    #pane-motion-ns {
+      filter:url(#filter-motion-ns);
+      display:inline;
+    }
+
+    #pane-motion-ew1 {
+      filter:url(#filter-motion-ew1);
+      display:inline;
+    }
+
+    #pane-motion-ew2 {
+      filter:url(#filter-motion-ew2);
+      display:inline;
+    }
+
+    #pane-motion-map {
+      filter:url(#filter-motion-map);
+      display:inline;
+    }
+
+    #divergence-zone {
+      filter:url(#filter-divergence);
+      opacity:1;
+    }
+
+    #convergence-zone {
+      filter:url(#filter-convergence);
+      opacity:0.5;
+    }
+
+    #elevation {
+      filter:url(#apply-elevations);
+    }
+
+    #motion {
+      /* fill:url(#Checkerboard); */
+      /* filter:url(#apply-motion); */
+      display:inline;
+    }
+
+    #colors {
+      filter:url(#filter-topology-color-table-wiki);
+      display:inline;
+    }
+
+    </style>
+
+    <defs>
+      <linearGradient id="fade-v" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:rgb(0,0,0);stop-opacity:0" />
+        <stop offset="20%" style="stop-color:rgb(0,255,0);stop-opacity:1" />
+        <stop offset="80%" style="stop-color:rgb(0,255,0);stop-opacity:1" />
+        <stop offset="100%" style="stop-color:rgb(0,0,0);stop-opacity:0" />
+      </linearGradient>
+
+      <linearGradient id="fade-h" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" style="stop-color:rgb(0,0,0);stop-opacity:1" />
+        <stop offset="20%" style="stop-color:rgb(127,127,127);stop-opacity:0" />
+        <stop offset="80%" style="stop-color:rgb(127,127,127);stop-opacity:0" />
+        <stop offset="100%" style="stop-color:rgb(0,0,0);stop-opacity:1" />
+      </linearGradient>
+
+      <pattern id="Checkerboard" patternTransform="translate(0,0) scale(50,50)" height="2" width="2" patternUnits="userSpaceOnUse">
+        <rect style="fill:white;stroke:none" y="0" height="1" width="1" x="0" />
+        <rect style="fill:white;stroke:none" y="1" height="1" width="1" x="1" />
+      </pattern>
+
+      <!--
+      Mass: Turbulence for three bands: equatorial, temperate, polar
+      -->
+      <filter x="0" y="0" width="1" height="1" id="mass-polar">
+          <feTurbulence seed="0" baseFrequency="0.0 0.005" type="turbulence" result="fpr1" numOctaves="7"/>
+          <feColorMatrix values="0 0 0 0 0 0 1.3 0 0 0 0 0 0 0 0 0 1 0 0 0" type="matrix" result="fpr2" in="fpr1" color-interpolation-filters="sRGB" />
+          <feComposite in2="SourceAlpha" operator="in" k1="1" k2="0" k3="0" k4="0" color-interpolation-filters="sRGB" />
+      </filter>
+      <filter x="0" y="0" width="1" height="1" id="mass-temperate">
+          <feTurbulence seed="0" baseFrequency="0.002 0.005" type="turbulence" result="fpr1" numOctaves="7"/>
+          <feColorMatrix values="0 0 0 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 0 0 0" type="matrix" result="fpr2" in="fpr1" color-interpolation-filters="sRGB" />
+          <feComposite in2="SourceAlpha" operator="in" k1="1" k2="0" k3="0" k4="0" color-interpolation-filters="sRGB"/>
+      </filter>
+      <filter x="0" y="0" width="1" height="1" id="mass-equatorial" >
+          <feTurbulence seed="0" baseFrequency="0.003" type="turbulence" result="fpr1" numOctaves="7"/>
+          <feColorMatrix values="0 0 0 0 0 0 1.0 0 0 0 0 0 0 0 0 0 1 0 0 0" type="matrix" result="fpr2" in="fpr1"  color-interpolation-filters="sRGB"/>
+          <feComposite in2="SourceAlpha" operator="in" k1="1" k2="0" k3="0" k4="0" color-interpolation-filters="sRGB"/>
+      </filter>
+
+      <!--
+      Filter to mask seams at east-west edges of map and add base black background to mass
+      -->
+      <filter x="0" y="0" width="1" height="1" id="filter-world-mass">
+          <feImage xlink:href="#seam-mask" result="seam-fade" x="0" y="0" width="100%" height="100%"/>
+          <feComposite result="mass-alpha" in2="seam-fade" in="SourceGraphic" operator="in" k1="0" k2="1" k3="0" k4="0"  color-interpolation-filters="sRGB"/>
+          <feFlood result="mass-base" flood-color="#000000"/>
+          <feMerge>
+            <feMergeNode in="mass-base"/>
+            <feMergeNode in="mass-alpha"/>
+          </feMerge>
+      </filter>
+
+      <!--
+      Turbulence for plate tectonics.
+      fractalNoise for divergence zones
+      Calculate north, south, east, west motions with convolve matrix
+      Convergence zones are areas between divergence zones
+      -->
+      <filter id="filter-motion-ns" x="0" y="0" width="1" height="1" filterUnits="objectBoundingBox" color-interpolation-filters="sRGB">
+        <!-- Fracture lines running EW, pushing plates NS -->
+        <feTurbulence  seed="0" baseFrequency="0.0005 0.003" type="turbulence" numOctaves="3"/>
+        <feColorMatrix result="fv-base" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 1" />
+      </filter>
+
+      <filter id="filter-motion-ew1" x="0" y="0" width="1" height="1" filterUnits="objectBoundingBox" color-interpolation-filters="sRGB">
+        <!-- Fracture lines running NS, pushing plates EW. Two patterns, one each for bh and bl regions, to stagger intersections -->
+        <feTurbulence  seed="0" baseFrequency="0.004 0.001" type="turbulence" numOctaves="3"/>
+        <feColorMatrix result="fh-1" type="matrix" values="1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1" />
+      </filter>
+
+      <filter id="filter-motion-ew2" x="0" y="0" width="1" height="1" filterUnits="objectBoundingBox" color-interpolation-filters="sRGB">
+        <!-- Fracture lines running NS, pushing plates EW. Two patterns, one each for bh and bl regions, to stagger intersections -->
+        <feTurbulence  seed="2" baseFrequency="0.004 0.001" type="turbulence" numOctaves="3"/>
+        <feColorMatrix result="fh-2" type="matrix" values="1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1" />
+      </filter>
+
+      <filter id="filter-motion-map" x="0" y="0" width="1" height="1" filterUnits="objectBoundingBox" color-interpolation-filters="sRGB">
+        <feImage result="fv-base" xlink:href="#pane-motion-ns" x="0" y="0" width="100%" height="100%"/>
+        <feImage result="fh-1" xlink:href="#pane-motion-ew1" x="0" y="0" width="100%" height="100%"/>
+        <feImage result="fh-2" xlink:href="#pane-motion-ew2" x="0" y="0" width="100%" height="100%"/>
+
+        <!-- Separate high & low blue values for NS motion blocks -->
+        <feColorMatrix result="bh-base" in="fv-base" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 0 0" />
+        <feComponentTransfer result="bh" in="bh-base" color-interpolation-filters="sRGB" >
+            <feFuncA type="discrete" tableValues="0 1"/>
+        </feComponentTransfer>
+        <feComponentTransfer result="bl" in="bh-base" color-interpolation-filters="sRGB">
+            <feFuncA type="discrete" tableValues="1 0"/>
+        </feComponentTransfer>
+
+        <!-- Separate high & low blue values for two variations of EW motion blocks -->
+        <feComposite result="rh" in="fh-1" in2="bh" operator="in" k1="1" k2="0" k3="0" k4="0"/>
+        <feComposite result="h" in="rh" in2="bh" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+
+        <feComposite result="rl" in="fh-2" in2="bl" operator="in" k1="1" k2="0" k3="0" k4="0"/>
+        <feComposite result="l" in="rl" in2="bl" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+
+        <!-- Merge blocks -->
+        <feMerge result="blocks">
+          <feMergeNode in="l"/>
+          <feMergeNode in="h"/>
+        </feMerge>
+
+        <!-- Displace blocks to roughen seams -->
+        <feTurbulence seed="0" baseFrequency="0.01" type="fractalNoise" numOctaves="3"/>
+        <feColorMatrix result="motion-base" type="matrix" values="1 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1" />
+        <feDisplacementMap result="afterMove" in="blocks" in2="motion-base" scale="20" xChannelSelector="R" yChannelSelector="B" color-interpolation-filters="sRGB"/>
+      </filter>
+
+      <!--
+      Apply motion to mass
+      -->
+      <filter id="apply-motion" x="0" y="0" width="1" height="1" filterUnits="objectBoundingBox">
+        <feImage xlink:href="#pane-motion" x="0" y="0" width="100%" height="100%"/>
+        <feGaussianBlur result="motion" stdDeviation="5" color-interpolation-filters="sRGB"/>
+        <feDisplacementMap result="afterMove" in2="motion" in="SourceGraphic" scale="50" xChannelSelector="R" yChannelSelector="B" color-interpolation-filters="sRGB"/>
+      </filter>
+
+      <!--
+      Divergence zone
+      -->
+      <filter id="filter-divergence" x="0" y="0" width="1" height="1">
+        <!-- <feFlood flood-color="#000000" result="bg"/> -->
+
+        <!-- North/South divergence  -->
+        <feColorMatrix result="ns" in="SourceGraphic" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 0 0" color-interpolation-filters="sRGB"/>
+        <feComponentTransfer result="ns-troughs" color-interpolation-filters="sRGB">
+            <feFuncB type="table" tableValues="0.5 1 0 1 0.5"/>
+            <feFuncA type="table" tableValues="0 1 0.5 1 0"/>
+        </feComponentTransfer>
+        <feConvolveMatrix result="ns-divergence" in="ns" kernelMatrix="-3 -10 -3 0 0 0 3 10 3" kernelUnitLength="1" edgeMode="duplicate" preserveAlpha="false"
+          order="3" divisor="1" targetX="1" targetY="1" bias="0" color-interpolation-filters="sRGB"/>
+        <feComposite in="ns-troughs" in2="ns-divergence" operator="in" k1="1" k2="0" k3="0" k4="0"/>
+        <feColorMatrix result="ns-elev" type="hueRotate" values="240" />
+
+        <!-- East/West divergence  -->
+        <feColorMatrix result="ew" in="SourceGraphic" type="matrix" values="1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0" color-interpolation-filters="sRGB"/>
+        <feComponentTransfer result="ew-troughs" color-interpolation-filters="sRGB">
+            <feFuncR type="table" tableValues="0.5 1 0 1 0.5"/>
+        </feComponentTransfer>
+        <feConvolveMatrix result="ew-divergence" in="ew" kernelMatrix="-3 0 3 -10 0 10 -3 10 3" kernelUnitLength="1" edgeMode="duplicate" preserveAlpha="false"
+          order="3" divisor="1" targetX="1" targetY="1" bias="0" color-interpolation-filters="sRGB"/>
+        <feComposite in="ew-troughs" in2="ew-divergence" operator="in" k1="1" k2="0" k3="0" k4="0"/>
+        <feColorMatrix result="ew-elev" type="hueRotate" values="120" />
+
+        <!-- Combine troughs -->
+        <feComposite result="elev-divergence" in="ew-elev" in2="ns-elev" operator="arithmetic" k1="0" k2="0.5" k3="2" k4="0"/>
+
+      </filter>
+
+      <!--
+      Convergence zone
+      -->
+      <filter id="filter-convergence" x="0" y="0" width="1" height="1">
+
+        <!-- North/South convergence -->
+        <feColorMatrix result="ns" in="SourceGraphic" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 0 0" color-interpolation-filters="sRGB"/>
+        <feComponentTransfer result="ns-ridges" color-interpolation-filters="sRGB">
+            <feFuncB type="table" tableValues="0 1 0"/>
+            <feFuncA type="table" tableValues="0 1 0"/>
+        </feComponentTransfer>
+        <feConvolveMatrix result="ns-convergence" in="ns" kernelMatrix="3 10 3 0 0 0 -3 -10 -3" kernelUnitLength="1" edgeMode="duplicate" preserveAlpha="false"
+          order="3" divisor="1" targetX="1" targetY="1" bias="0" color-interpolation-filters="sRGB"/>
+        <feComposite in="ns-ridges" in2="ns-convergence" operator="in" k1="1" k2="0" k3="0" k4="0"/>
+        <feColorMatrix result="ns-elev" type="hueRotate" values="240" />
+
+        <!-- East/West convergence  -->
+        <feColorMatrix result="ew" in="SourceGraphic" type="matrix" values="1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0" color-interpolation-filters="sRGB"/>
+        <feComponentTransfer result="ew-ridges" color-interpolation-filters="sRGB">
+            <feFuncR type="table" tableValues="0 1 0"/>
+        </feComponentTransfer>
+        <feConvolveMatrix result="ew-convergence" in="ew" kernelMatrix="3 0 -3 10 0 -10 3 10 -3" kernelUnitLength="1" edgeMode="duplicate" preserveAlpha="false"
+          order="3" divisor="1" targetX="1" targetY="1" bias="0" color-interpolation-filters="sRGB"/>
+        <feComposite in="ew-ridges" in2="ew-convergence" operator="in" k1="1" k2="0" k3="0" k4="0"/>
+        <feColorMatrix result="ew-elev" type="hueRotate" values="120" />
+
+        <!-- <feComposite in="ew-elev" in2="ns-elev" operator="arithmetic" k1="1" k2="0.5" k3="1" k4="0"/> -->
+        <feBlend in="ew-elev" in2="ns-elev" mode="screen"/>
+        <feComponentTransfer result="gamma" color-interpolation-filters="sRGB" >
+            <feFuncG type="gamma" amplitude="0.5" exponent="0.5" offset="0"/>
+        </feComponentTransfer>
+      </filter>
+
+      <!--
+      Apply elevation changes: divergence & convergence zones
+      -->
+      <filter id="apply-elevations" x="0" y="0" width="1" height="1">
+        <feImage xlink:href="#divergence-zone" x="0" y="0" width="100%" height="100%"/>
+        <feGaussianBlur result="div" stdDeviation="1" />
+        <feBlend result="mass-div" in="SourceGraphic" in2="div" mode="multiply" />
+        <feImage result="con" xlink:href="#convergence-zone" x="0" y="0" width="100%" height="100%"/>
+        <feBlend result="mass-con" in="mass-div" in2="con" mode="screen" />
+      </filter>
+
+      <!--
+      Colors
+      -->
+      <filter x="-10%" y="-10%" width="120%" filterUnits="objectBoundingBox" id="filter-topology-color-table-wiki" height="120%">
+          <feColorMatrix values="0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 1" type="matrix" color-interpolation-filters="sRGB" result="fpr1" in="SourceGraphic"/>
+          <feComponentTransfer color-interpolation-filters="sRGB" result="fpr2" in="fpr1">
+              <feFuncR tableValues="0.44	0.52	0.55	0.59	0.63	0.67	0.73	0.78	0.85	0.67	0.58	0.74	0.88	0.91	0.83	0.76	0.67	0.73	0.96" type="table"/>
+              <feFuncG tableValues="0.67	0.73	0.76	0.79	0.82	0.86	0.89	0.93	0.95	0.82	0.75	0.8	0.89	0.88	0.79	0.65	0.53	0.68	0.96" type="table"/>
+              <feFuncB tableValues="0.85	0.89	0.92	0.94	0.97	0.98	1	1	1	0.65	0.55	0.59	0.71	0.71	0.62	0.42	0.33	0.6	0.95" type="table"/>
+              <feFuncA type="identity"/>
+          </feComponentTransfer>
+      </filter>
+
+      <!--
+      Utility pieces
+      -->
+      <rect id="region" x="-100" y="0" width="1400" height="200" />
+      <rect id="seam-mask" x="0" y="0" width="100%" height="100%" fill="url(#fade-h)" />
+      <rect id="pane" x="0" y="0" width="1200" height="600" />
+
+      <g id="pane-world-mass" >
+        <use xlink:href="#pane" x="0" y="0" class="bg"/>
+        <g class="polar">
+          <use class="mass" xlink:href="#region" x="0" y="-100" />
+          <use class="mass" xlink:href="#region" x="0" y="400" />
+        </g>
+        <g class="temperate">
+          <use class="mass" xlink:href="#region" x="0" y="50" />
+          <use class="mass" xlink:href="#region" x="0" y="350" />
+        </g>
+        <g class="equatorial">
+          <use class="mass" xlink:href="#region" x="0" y="200" />
+        </g>
+      </g>
+
+      <use id="pane-motion-ns" xlink:href="#pane" x="0" y="0" />
+      <use id="pane-motion-ew1" xlink:href="#pane" x="0" y="0" />
+      <use id="pane-motion-ew2" xlink:href="#pane" x="0" y="0" />
+
+      <g id="pane-motion">
+        <use id="pane-motion-map" xlink:href="#pane" x="0" y="0" />
+        <use xlink:href="#pane" x="0" y="0" class="seam"/>
+      </g>
+
+      <g id="divergence-zone">
+        <use xlink:href="#pane-motion"/>
+      </g>
+
+      <g id="convergence-zone">
+        <use xlink:href="#pane-motion"/>
+      </g>
+
+
+    </defs>
+
+    <!--
+    World Map
+    -->
+
+    <g id="colors">
+      <g id="motion">
+        <g id="elevation">
+          <use xlink:href="#pane-world-mass" x="0" y="0" />
+          <use xlink:href="#pane" x="0" y="0" class="seam"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- <use xlink:href="#pane" x="0" y="0" fill="#888888"/> -->
+    <!-- <use xlink:href="#pane-motion" x="0" y="0" style="opacity:0.5;" /> -->
+    <!-- <use xlink:href="#divergence-zone" x="0" y="0" style="opacity:1"/> -->
+    <!-- <use xlink:href="#convergence-zone" x="0" y="0" style="opacity:1"/> -->
+
+    <circle cx="50%" cy="50%" r="20" fill="#CC0F16" />
+</svg>

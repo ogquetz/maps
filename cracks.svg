@@ -1,0 +1,491 @@
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd" >
+<svg contentScriptType="text/ecmascript" width="1200" height="600" xmlns:xlink="http://www.w3.org/1999/xlink" zoomAndPan="magnify" contentStyleType="text/css"
+     preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" version="1.0"
+     viewBox="0 0 1200 600" >
+     <!-- viewBox="0 0 2600 1200" > -->
+    <title>World: 3 Zones</title>
+
+    <style xml:space="preserve" type="text/css">
+    .bg {
+      fill:#000000;
+    }
+
+    .seam {
+      fill:url(#fade-h);
+    }
+
+    .check {
+      fill:url(#Checkerboard);
+    }
+
+    #pane-mass {
+      filter:url(#filter-mass-base);
+    }
+
+    .divergence {
+      filter:url(#filter-divergence);
+      opacity:1;
+      /* mix-blend-mode:multiply; */
+    }
+
+    .convergence {
+      filter:url(#filter-convergence);
+      opacity:1;
+      /* mix-blend-mode:screen; */
+    }
+
+    #mass-motion {
+      filter:url(#filter-mass-motion);
+    }
+
+    #colors {
+      filter:url(#filter-topology-color-table-wiki);
+      display:inline;
+    }
+
+
+    .mask {
+      filter:url(#filter-mask);
+    }
+
+    .mask-in {
+      filter:url(#filter-mask-in);
+    }
+
+    .mask-out {
+      filter:url(#filter-mask-out);
+    }
+
+    .crack-e {
+      filter:url(#filter-crack-e);
+    }
+
+    .crack-w {
+      filter:url(#filter-crack-w);
+      /* opacity:0.5; */
+    }
+
+    .motion-ns {
+      filter:url(#filter-motion-ns);
+    }
+
+    .motion-sn {
+      filter:url(#filter-motion-sn);
+      opacity:0.5;
+    }
+
+    .motion-color-ns {
+      filter:url(#filter-motion-color-ns);
+    }
+
+    .motion-w {
+      filter:url(#filter-motion-w)
+    }
+
+    .motion-e {
+      filter:url(#filter-motion-e)
+    }
+
+    .motion-wns {
+      filter:url(#filter-motion-wns)
+    }
+
+    .motion-ens {
+      filter:url(#filter-motion-ens)
+    }
+
+    .cracks {
+      filter:url(#cracks);
+    }
+
+/* deprecated trough */
+    .trough {
+      opacity:1;
+      mix-blend-mode:multiply;
+      filter:url(#filter-troughs)
+    }
+
+
+    </style>
+
+    <defs>
+      <linearGradient id="fade-v" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:rgb(0,0,0);stop-opacity:0" />
+        <stop offset="20%" style="stop-color:rgb(0,255,0);stop-opacity:1" />
+        <stop offset="80%" style="stop-color:rgb(0,255,0);stop-opacity:1" />
+        <stop offset="100%" style="stop-color:rgb(0,0,0);stop-opacity:0" />
+      </linearGradient>
+
+      <linearGradient id="fade-h" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" style="stop-color:rgb(127,127,127);stop-opacity:1" />
+        <stop offset="20%" style="stop-color:rgb(127,127,127);stop-opacity:0" />
+        <stop offset="80%" style="stop-color:rgb(127,127,127);stop-opacity:0" />
+        <stop offset="100%" style="stop-color:rgb(127,127,127);stop-opacity:1" />
+      </linearGradient>
+
+      <pattern id="Checkerboard" patternTransform="translate(0,0) scale(50,50)" height="2" width="2" patternUnits="userSpaceOnUse">
+        <rect style="fill:black;stroke:none" y="0" height="1" width="1" x="0" />
+        <rect style="fill:black;stroke:none" y="1" height="1" width="1" x="1" />
+      </pattern>
+
+      <!-- Motion and cracks -->
+      <filter id="filter-motion-ew1" x="0" y="0" width="1" height="1">
+        <feTurbulence seed="0" baseFrequency="0.002 0.001" type="turbulence" numOctaves="5" result="motion" color-interpolation-filters="sRGB"/>
+        <feColorMatrix result="r" type="matrix" values="1 1 0 0 0  0 0 0 0 0  0 0 0 0 0  -1 -1 0 0 1" color-interpolation-filters="sRGB"/>
+      </filter>
+
+      <filter id="filter-motion-ns1" x="0" y="0" width="1" height="1">
+        <feTurbulence seed="0" baseFrequency="0.0005 0.004" type="turbulence" numOctaves="5" result="motion" color-interpolation-filters="sRGB"/>
+        <feColorMatrix result="r" type="matrix" values="1 0 1 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 1" color-interpolation-filters="sRGB"/>
+      </filter>
+
+      <filter id="filter-motion-ns2" x="0" y="0" width="1" height="1">
+        <feTurbulence seed="2" baseFrequency="0.0005 0.004" type="turbulence" numOctaves="5" result="motion" color-interpolation-filters="sRGB"/>
+        <feColorMatrix result="r" type="matrix" values="1 0 1 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 1" color-interpolation-filters="sRGB"/>
+      </filter>
+
+      <filter id="filter-mask" x="0" y="0" width="1" height="1">
+        <feComponentTransfer result="mask" in="SourceGraphic" color-interpolation-filters="sRGB">
+            <feFuncR type="discrete" tableValues="0 1"/>
+        </feComponentTransfer>
+        <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1 0 0 0 0" />
+      </filter>
+
+      <filter id="filter-troughs" x="0" y="0" width="1" height="1">
+        <!-- N/S troughs from E/W motion -->
+        <feColorMatrix result="ew" in="SourceGraphic" type="matrix" values="0 0 0 0 0  1 0 0 0 0  0 0 0 0 0  0 0 0 1 0  " />
+        <feComponentTransfer result="edges" in="ew" color-interpolation-filters="sRGB">
+            <feFuncG type="linear" slope="2" intercept="-0.5"/>
+        </feComponentTransfer>
+        <feColorMatrix result="xl" in="edges" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 1 0 0 0  " />
+        <feConvolveMatrix result="convolve-ew" in="xl" kernelMatrix="-3 0 3 -10 0 10 -3 0 3" kernelUnitLength="1" edgeMode="duplicate" preserveAlpha="false"
+          order="3" divisor="1" targetX="1" targetY="1" bias="0" color-interpolation-filters="sRGB"/>
+        <feComposite result="edges-e" in="edges" in2="convolve-ew" operator="in" k1="1" k2="0" k3="0" k4="0"/>
+        <feComponentTransfer result="mids" in="edges-e" color-interpolation-filters="sRGB">
+            <feFuncG type="table" tableValues="1 0.5 0.7 0 0.7 0.5 1"/>
+        </feComponentTransfer>
+
+        <feComponentTransfer result="trough" in="mids" color-interpolation-filters="sRGB">
+            <feFuncG type="gamma" amplitude="1" exponent="0.5" offset="0"/>
+        </feComponentTransfer>
+        <feGaussianBlur stdDeviation="10" />
+        <feBlend result="trough-ew" in2="trough" mode="multiply"/>
+
+        <feFlood result="bg" flood-color="#00FF00" />
+        <feBlend result="pane-trough-ew" in2="trough-ew" mode="multiply"/>
+
+        <!-- E/W troughs from N/S motion -->
+        <feColorMatrix result="ns" in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 1 0 0  0 0 0 0 0  0 0 0 1 0  " />
+        <feComponentTransfer result="edges-ns" in="ns" color-interpolation-filters="sRGB">
+            <feFuncG type="linear" slope="2" intercept="-0.5"/>
+        </feComponentTransfer>
+        <feColorMatrix result="alpha-ns" in="edges-ns" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 1 0 0 0  " />
+        <feConvolveMatrix result="convolve-ns" in="alpha-ns" kernelMatrix="-3 -10 -3 0 0 0 3 10 3" kernelUnitLength="1" edgeMode="duplicate" preserveAlpha="false"
+          order="3" divisor="1" targetX="1" targetY="1" bias="0" color-interpolation-filters="sRGB"/>
+        <feComposite result="edges-n" in="edges-ns" in2="convolve-ns" operator="in" k1="1" k2="0" k3="0" k4="0"/>
+        <feComponentTransfer result="mids-n" in="edges-n" color-interpolation-filters="sRGB">
+            <feFuncG type="table" tableValues="1 0.5 0.7 0 0.7 0.5 1"/>
+        </feComponentTransfer>
+
+        <feComponentTransfer result="trough-n" in="mids-n" color-interpolation-filters="sRGB">
+            <feFuncG type="gamma" amplitude="1" exponent="0.5" offset="0"/>
+        </feComponentTransfer>
+
+        <feGaussianBlur stdDeviation="10" />
+        <feBlend result="trough-ns" in2="trough-n" mode="multiply"/>
+
+        <!-- Merge NS and EW troughs -->
+        <feBlend result="trough-ns" in2="pane-trough-ew" mode="multiply"/>
+
+      </filter>
+
+      <filter id="filter-crack-e" x="0" y="0" width="1" height="1">
+        <feComponentTransfer result="edges" in="SourceGraphic" color-interpolation-filters="sRGB">
+          <feFuncA type="gamma" amplitude="1" exponent="3" offset="0"/>
+        </feComponentTransfer>
+        <feConvolveMatrix result="slope-r" in="edges" kernelMatrix="-3 0 3 -10 0 10 -3 0 3" kernelUnitLength="1" edgeMode="duplicate" preserveAlpha="false"
+          order="3" divisor="1" targetX="1" targetY="1" bias="0" color-interpolation-filters="sRGB"/>
+        <feConvolveMatrix result="slope-l" in="edges" kernelMatrix="3 0 -3 10 0 -10 3 0 -3" kernelUnitLength="1" edgeMode="duplicate" preserveAlpha="false"
+          order="3" divisor="1" targetX="1" targetY="1" bias="0" color-interpolation-filters="sRGB"/>
+        <feComposite result="slope-lr" in="slope-r" in2="slope-l" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+      </filter>
+
+      <!-- <filter id="filter-crack-e" x="0" y="0" width="1" height="1">
+        <feConvolveMatrix result="motion-convolve" in="SourceGraphic" kernelMatrix="-3 0 3 -10 1 10 -3 0 3" kernelUnitLength="1" edgeMode="duplicate" preserveAlpha="false"
+          order="3" divisor="1" targetX="1" targetY="1" bias="0" color-interpolation-filters="sRGB"/>
+        <feComposite in="SourceGraphic" in2="motion-convolve" operator="arithmetic" k1="1" k2="0" k3="0" k4="0"/>
+      </filter> -->
+
+      <filter id="filter-crack-w" x="0" y="0" width="1" height="1">
+        <feConvolveMatrix result="motion-convolve" in="SourceGraphic" kernelMatrix="3 0 -3 10 1 -10 3 0 -3" kernelUnitLength="1" edgeMode="duplicate" preserveAlpha="false"
+          order="3" divisor="1" targetX="1" targetY="1" bias="0" color-interpolation-filters="sRGB"/>
+        <feComposite in="SourceGraphic" in2="motion-convolve" operator="arithmetic" k1="1" k2="0" k3="0" k4="0"/>
+      </filter>
+
+      <filter id="filter-motion-e" x="0" y="0" width="1" height="1">
+        <feColorMatrix result="alpha" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1 0 0 0 0" color-interpolation-filters="sRGB"/>
+        <feComponentTransfer result="low" in="alpha" color-interpolation-filters="sRGB">
+            <feFuncA type="discrete" tableValues="1 0"/>
+        </feComponentTransfer>
+      </filter>
+
+      <filter id="filter-motion-w" x="0" y="0" width="1" height="1">
+        <feColorMatrix result="alpha" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1 0 0 0 0" color-interpolation-filters="sRGB"/>
+        <feComponentTransfer result="high" in="alpha" color-interpolation-filters="sRGB">
+            <feFuncA type="discrete" tableValues="0 1"/>
+        </feComponentTransfer>
+      </filter>
+
+
+
+      <filter id="filter-motion-ns" x="0" y="0" width="100%" height="100%">
+        <feColorMatrix result="ns" in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  1 0 0 0 0  0 0 0 1 0  " />
+
+        <feConvolveMatrix result="motion-convolve" in="ns" kernelMatrix="-3 -10 -3 0 0 0 3 10 3" kernelUnitLength="1" edgeMode="duplicate" preserveAlpha="false"
+          order="3" divisor="1" targetX="1" targetY="1" bias="0" color-interpolation-filters="sRGB"/>
+        <feComposite in="ns" in2="motion-convolve" operator="in" k1="0" k2="0" k3="0" k4="0"/>
+      </filter>
+
+
+      <filter id="filter-motion-sn" x="0" y="0" width="1" height="1">
+        <feFlood result="bg" flood-color="#000000"/>
+        <feConvolveMatrix result="motion-convolve" in="SourceGraphic" kernelMatrix="3 10 3 0 0 0 -3 -10 -3" kernelUnitLength="1" edgeMode="duplicate" preserveAlpha="false"
+          order="3" divisor="2" targetX="1" targetY="1" bias="0" color-interpolation-filters="sRGB"/>
+        <feComposite in="SourceGraphic" in2="motion-convolve" operator="arithmetic" k1="1" k2="0" k3="0" k4="0"/>
+      </filter>
+
+      <filter id="filter-motion-color-ns" x="0" y="0" width="1" height="1">
+        <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  1 0 0 0 0  0 0 0 1 0" color-interpolation-filters="sRGB"/>
+      </filter>
+
+      <filter id="filter-motion-wns" x="0" y="0" width="1" height="1">
+        <feImage xlink:href="#pane-motion1-ns" x="0" y="0" width="100%" height="100%"/>
+        <feComposite in2="SourceGraphic" operator="in" k1="1" k2="0" k3="0" k4="0" color-interpolation-filters="sRGB"/>
+        <feComposite in2="SourceGraphic" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" color-interpolation-filters="sRGB"/>
+      </filter>
+
+      <filter id="filter-motion-ens" x="0" y="0" width="1" height="1">
+        <feImage xlink:href="#pane-motion2-ns" x="0" y="0" width="100%" height="100%"/>
+        <feComposite in2="SourceGraphic" operator="in" k1="1" k2="0" k3="0" k4="0" color-interpolation-filters="sRGB"/>
+        <feComposite in2="SourceGraphic" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" color-interpolation-filters="sRGB"/>
+      </filter>
+
+      <filter id="cracks" x="0" y="0" width="1" height="1">
+        <feColorMatrix result="r" in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"  color-interpolation-filters="sRGB"/>
+        <feComposite result="base" in2="r" operator="arithmetic" k1="10" k2="1" k3="1" k4="0" color-interpolation-filters="sRGB"/>
+        <feComponentTransfer result="thin" in="base" color-interpolation-filters="sRGB">
+            <feFuncR type="gamma" amplitude="1.1" exponent="0.1" offset="-0.1"/>
+        </feComponentTransfer>
+        <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -2 0 0 0 2"  color-interpolation-filters="sRGB"/>
+        <feComponentTransfer result="thin" color-interpolation-filters="sRGB">
+            <feFuncA type="gamma" amplitude="3" exponent="2" offset="-0.1"/>
+        </feComponentTransfer>
+      </filter>
+
+      <filter id="filter-mask-in" x="0" y="0" width="1" height="1">
+        <feImage result="mask" xlink:href="#mask-motion-west" x="0" y="0" width="100%" height="100%"/>
+        <feComposite in="SourceGraphic" in2="mask" operator="in" k1="1" k2="0" k3="0" k4="0"  color-interpolation-filters="sRGB"/>
+      </filter>
+
+      <filter id="filter-mask-out" x="0" y="0" width="1" height="1">
+        <feImage result="mask" xlink:href="#mask-motion-west" x="0" y="0" width="100%" height="100%"/>
+        <feComposite in="SourceGraphic" in2="mask" operator="out" k1="1" k2="0" k3="0" k4="0"  color-interpolation-filters="sRGB"/>
+      </filter>
+
+      <filter id="filter-combine-motion" x="0" y="0" width="100%" height="100%">
+        <feImage xlink:href="#motion-ns" x="0" y="0" width="100%" height="100%"/>
+        <feComposite in2="SourceGraphic" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" color-interpolation-filters="sRGB"/>
+      </filter>
+
+      <!-- <filter id="filter-divergence" x="0" y="0" width="1" height="1">
+        <feImage result="divergence" xlink:href="#pane-divergence" x="0" y="0" width="100%" height="100%"/>
+        <feBlend result="divergence" mode="multiply" in="SourceGraphic" in2="divergence"/>
+      </filter> -->
+
+
+
+
+      <!-- REDO -->
+
+      <!-- Mass and displacement map -->
+      <filter x="-10%" y="-10%" width="120%" filterUnits="objectBoundingBox" id="filter-topology-color-table-wiki" height="120%">
+          <feColorMatrix values="0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 1" type="matrix" color-interpolation-filters="sRGB" result="fpr1" in="SourceGraphic"/>
+          <feComponentTransfer color-interpolation-filters="sRGB" result="fpr2" in="fpr1">
+              <feFuncR tableValues="0.44	0.52	0.55	0.59	0.63	0.67	0.73	0.78	0.85	0.67	0.58	0.74	0.88	0.91	0.83	0.76	0.67	0.73	0.96" type="table"/>
+              <feFuncG tableValues="0.67	0.73	0.76	0.79	0.82	0.86	0.89	0.93	0.95	0.82	0.75	0.8	0.89	0.88	0.79	0.65	0.53	0.68	0.96" type="table"/>
+              <feFuncB tableValues="0.85	0.89	0.92	0.94	0.97	0.98	1	1	1	0.65	0.55	0.59	0.71	0.71	0.62	0.42	0.33	0.6	0.95" type="table"/>
+              <feFuncA type="identity"/>
+          </feComponentTransfer>
+      </filter>
+
+      <filter id="filter-mass-base" x="0" y="0" width="1" height="1">
+        <feTurbulence seed="0" baseFrequency="0.003" type="turbulence" numOctaves="7" result="motion" color-interpolation-filters="sRGB"/>
+        <feColorMatrix result="g" type="matrix" values="0 0 0 0 0  0 1.5 0 0 0  0 0 0 0 0  0 0 0 0 1" color-interpolation-filters="sRGB"/>
+        <feComponentTransfer color-interpolation-filters="sRGB">
+            <feFuncG type="gamma" amplitude="1" exponent="3" offset="0"/>
+        </feComponentTransfer>
+        <feComponentTransfer color-interpolation-filters="sRGB">
+            <feFuncG type="table" tableValues="0.3 0.6"/>
+        </feComponentTransfer>
+        <!-- <feFlood flood-color="#008800"/> -->
+      </filter>
+
+      <filter id="filter-mass-motion" x="0" y="0" width="1" height="1">
+        <feImage result="map" xlink:href="#pane-motion" x="0" y="0" width="100%" height="100%"/>
+        <feDisplacementMap in="SourceGraphic" in2="map" scale="100" xChannelSelector="R" yChannelSelector="B" color-interpolation-filters="sRGB"/>
+      </filter>
+
+
+      <filter id="blobs" x="0" y="0" width="1" height="1">
+        <feTurbulence seed="2" baseFrequency="0.001" type="fractalNoise" numOctaves="7"  result="base"/>
+        <feColorMatrix result="base-r" in="base" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1 0 0 0 0" />
+        <feColorMatrix result="base-g" in="base" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 1 0 0 0  0 1 0 0 0" />
+        <feColorMatrix result="base-b" in="base" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 1 0 0" />
+        <feComponentTransfer result="mask" in="base-r" color-interpolation-filters="sRGB">
+          <feFuncA type="discrete" tableValues="0 1"/>
+        </feComponentTransfer>
+        <feComposite result="mask-g" in="base-g" in2="mask" operator="in" k1="1" k2="0" k3="0" k4="0"/>
+        <feComposite result="mask-b" in="base-b" in2="mask" operator="out" k1="1" k2="0" k3="0" k4="0"/>
+        <feFlood result="bg" flood-color="#000000"/>
+        <feMerge result="blue">
+          <feMergeNode in="bg"/>
+          <feMergeNode in="mask-g"/>
+          <feMergeNode in="mask-b"/>
+        </feMerge>
+        <feComposite in2="base-r" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+      </filter>
+
+      <filter id="plate-edges" x="0" y="0" width="1" height="1">
+        <feComponentTransfer result="mids" color-interpolation-filters="sRGB">
+          <feFuncR type="table" tableValues="0 1 0"/>
+          <feFuncB type="table" tableValues="0 1 0"/>
+        </feComponentTransfer>
+        <feComponentTransfer result="edges" color-interpolation-filters="sRGB">
+          <feFuncR type="gamma" amplitude="1" exponent="2" offset="0"/>
+          <feFuncB type="gamma" amplitude="1" exponent="2" offset="0"/>
+        </feComponentTransfer>
+        <feColorMatrix type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 1 0 0  1 0 1 0 0" />
+      </filter>
+
+      <filter id="filter-divergence" x="0" y="0" width="1" height="1">
+
+        <!-- East/West -->
+        <feColorMatrix result="base-r" in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1 0 0 0 0" />
+        <feConvolveMatrix result="convolve-r" in="base-r" kernelMatrix="-30 0 30 -100 0 100 -30 0 30" kernelUnitLength="1" edgeMode="duplicate" preserveAlpha="false"
+          order="3" divisor="1" targetX="1" targetY="1" bias="0" color-interpolation-filters="sRGB"/>
+        <feComponentTransfer result="mids-r" in="base-r" color-interpolation-filters="sRGB">
+          <feFuncR type="table" tableValues="0 1 0"/>
+          <feFuncA type="discrete" tableValues="1 1"/>
+        </feComponentTransfer>
+        <feComposite result="divergence-r-rough" in2="convolve-r" operator="in" k1="1" k2="0" k3="0" k4="0"/>
+        <feMerge result="r">
+          <feMergeNode in="SourceAlpha"/>
+          <feMergeNode in="divergence-r-rough"/>
+        </feMerge>
+
+        <!-- North/South -->
+        <feColorMatrix result="base-b" in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 1 0 0" />
+        <feConvolveMatrix result="convolve-b" in="base-b" kernelMatrix="-30 -100 -30 0 0 0 30 100 30" kernelUnitLength="1" edgeMode="duplicate" preserveAlpha="false"
+          order="3" divisor="1" targetX="1" targetY="1" bias="0" color-interpolation-filters="sRGB"/>
+        <feComponentTransfer result="mids-b" in="base-b" color-interpolation-filters="sRGB">
+          <feFuncB type="table" tableValues="0 1 0"/>
+          <feFuncA type="discrete" tableValues="1 1"/>
+        </feComponentTransfer>
+        <feComposite result="divergence-b-rough" in2="convolve-b" operator="in" k1="1" k2="0" k3="0" k4="0"/>
+        <feMerge result="b">
+          <feMergeNode in="SourceAlpha"/>
+          <feMergeNode in="divergence-b-rough"/>
+        </feMerge>
+
+        <!-- Combine -->
+        <feComposite result="divergence-rb" in2="r" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0  -1 0 -1 0 1  0 0 0 0 0  0 0 0 0 1" />
+        <feComponentTransfer result="troughs-rough" color-interpolation-filters="sRGB">
+            <feFuncG type="gamma" amplitude="1" exponent="1" offset="0"/>
+        </feComponentTransfer>
+        <feGaussianBlur stdDeviation="1"/>
+        <!-- <feBlend in2="troughs-rough" mode="multiply"/> -->
+        <feComponentTransfer result="troughs" color-interpolation-filters="sRGB">
+            <feFuncG type="table" tableValues="0 0.8 0.6 1"/>
+        </feComponentTransfer>
+
+      </filter>
+
+
+      <filter id="filter-convergence" x="0" y="0" width="1" height="1">
+        <feImage result="mass" xlink:href="#pane-mass" x="0" y="0" width="100%" height="100%"/>
+
+        <!-- East/West -->
+        <feColorMatrix result="base-r" in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1 0 0 0 0" />
+        <feConvolveMatrix result="convolve-r" in="base-r" kernelMatrix="30 0 -30 100 0 -100 30 0 -30" kernelUnitLength="1" edgeMode="duplicate" preserveAlpha="false"
+          order="3" divisor="1" targetX="1" targetY="1" bias="0" color-interpolation-filters="sRGB"/>
+
+        <!-- North/South -->
+        <feColorMatrix result="base-b" in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 1 0 0" />
+        <feConvolveMatrix result="convolve-b" in="base-b" kernelMatrix="30 100 30 0 0 0 -30 -100 -30" kernelUnitLength="1" edgeMode="duplicate" preserveAlpha="false"
+          order="3" divisor="1" targetX="1" targetY="1" bias="0" color-interpolation-filters="sRGB"/>
+
+        <!-- Combine -->
+        <feComposite result="convergence-rb-rough" in2="convolve-r" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+        <!-- <feColorMatrix result="convergence-regions" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 1 0 0  1 0 1 0 0" /> -->
+        <feComposite result="convergence-mass-rough" in="mass" in2="convergence-rb-rough" operator="in" k1="1" k2="0" k3="0" k4="0"/>
+        <!-- <feFlood result="bg" flood-color="#000000" /> -->
+        <!-- <feMerge>
+          <feMergeNode in="bg"/>
+          <feMergeNode in="convergence-mass-rough"/>
+        </feMerge> -->
+        <feGaussianBlur stdDeviation="2"/>
+        <!-- <feBlend in2="convergence-mass-rough" mode="multiply"/> -->
+
+      </filter>
+
+
+      <filter id="apply-divergence" x="0" y="0" width="1" height="1">
+        <feImage xlink:href="#pane-divergence" x="0" y="0" width="100%" height="100%"/>
+        <feBlend in2="SourceGraphic" mode="multiply"/>
+      </filter>
+
+      <filter id="apply-convergence" x="0" y="0" width="1" height="1">
+        <feImage xlink:href="#pane-convergence" x="0" y="0" width="100%" height="100%"/>
+        <!-- <feBlend in2="SourceGraphic" mode="screen"/> -->
+        <feComposite in2="SourceGraphic" operator="arithmetic" k1="3" k2="1" k3="1" k4="0"/>
+      </filter>
+
+      <!--
+      Utility pieces
+      -->
+      <rect id="region" x="-100" y="0" width="1400" height="200" />
+      <rect id="seam-mask" x="0" y="0" width="100%" height="100%" fill="url(#fade-h)" />
+      <rect id="pane" x="0" y="0" width="1200" height="600" class="check"/>
+
+      <use id="pane-mass" xlink:href="#pane" x="0" y="0" />
+      <use id="pane-motion" xlink:href="#pane" x="0" y="0" filter="url(#blobs)"/>
+
+      <g id="pane-divergence" class="divergence">
+        <use xlink:href="#pane-motion" x="0" y="0"/>
+      </g>
+
+      <g id="pane-convergence" class="convergence">
+        <use xlink:href="#pane-motion" x="0" y="0"/>
+      </g>
+
+    </defs>
+
+    <!--
+    World Map
+    -->
+    <g id="colors">
+      <g id="mass-motion" >
+      <g filter="url(#apply-convergence)">
+        <!-- <g filter="url(#apply-divergence)"> -->
+          <use xlink:href="#pane-mass" x="0" y="0" />
+        <!-- </g> -->
+      </g>
+      </g>
+    </g>
+
+    <use xlink:href="#pane-divergence" x="1300" y="0" />
+    <use xlink:href="#pane-convergence" x="0" y="700" />
+    <use xlink:href="#pane-motion" x="1300" y="700" />
+    <circle cx="50%" cy="50%" r="20" fill="#CC0F16" />
+</svg>
