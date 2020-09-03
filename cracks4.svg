@@ -366,76 +366,46 @@
         <rect filter="url(#elevation)" x="0" y="0" width="1200" height="600" fill="#080"/>
       </g>
 
-      <filter id="xor-test" x="0" y="0" width="1" height="1">
-        <feFlood result="bg" flood-color="#000"/>
 
-        <feTurbulence result="base" seed="0" baseFrequency="0.005" type="fractalNoise" numOctaves="2"/>
-        <feColorMatrix result="base-r" in="base" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1 0 0 0 0" />
-        <feConvolveMatrix result="conv-r" kernelMatrix="-3 -10 1 10 3" kernelUnitLength="1" edgeMode="duplicate" preserveAlpha="false"
-        order="5 1" divisor="1" targetX="2" targetY="0" bias="0" color-interpolation-filters="sRGB"/>
-        <feComposite in="conv-r" in2="base-r" operator="arithmetic" k1="0" k2="1" k3="-1" k4="0"/>
-        <feColorMatrix type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -1 0 0 0 1" />
-        <feGaussianBlur result="region-r" stdDeviation="5" />
-        <feComposite result="r" in="base-r" in2="region-r" operator="in" k1="0" k2="1" k3="-1" k4="0"/>
+      <filter id="troughs-ew" x="-0.1" y="-0.1" width="1.2" height="1.2">
+        <!-- <feTurbulence result="base" seed="0" baseFrequency="0.003" type="fractalNoise" numOctaves="5"/> -->
 
-        <feColorMatrix result="base-b" in="base" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 1 0 0" />
-        <feConvolveMatrix result="conv-b" kernelMatrix="-3 -10 1 10 3" kernelUnitLength="1" edgeMode="duplicate" preserveAlpha="false"
-        order="1 5" divisor="1" targetX="0" targetY="2" bias="0" color-interpolation-filters="sRGB"/>
-        <feComposite in="conv-b" in2="base-b" operator="arithmetic" k1="0" k2="1" k3="-1" k4="0"/>
-        <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 -1 0 1" />
-        <feGaussianBlur result="region-b" stdDeviation="5" />
-        <feComposite result="b" in="base-b" in2="region-b" operator="in" k1="0" k2="1" k3="-1" k4="0"/>
+        <!-- East/West divergence -->
+        <feColorMatrix result="r" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 1" />
+        <feColorMatrix result="r-flip" type="matrix" values="-1 0 0 0 1  0 0 0 0 0  0 0 0 0 0  0 0 0 0 1" />
 
-        <feComposite in="b" in2="r" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
-
-        <!-- <feColorMatrix result="b" in="base" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 0 1" /> -->
-
-        <!-- <feMerge>
-          <feMergeNode in="bg"/>
-          <feMergeNode in="r"/>
-        </feMerge> -->
-
-
-      </filter>
-
-      <filter id="noise-test-f" x="-0.1" y="-0.1" width="1.2" height="1.2">
-        <feTurbulence seed="0" baseFrequency="0.003" type="fractalNoise" numOctaves="5"/>
-        <feColorMatrix result="f" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 1" />
-        <feColorMatrix result="f-flip" type="matrix" values="-1 0 0 0 1  0 0 0 0 0  0 0 0 0 0  0 0 0 0 1" />
-
-        <feColorMatrix in="f" result="mask-base" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1 0 0 0 0" />
-        <feComponentTransfer result="mask" color-interpolation-filters="sRGB">
+        <feColorMatrix in="r" result="mask-r-base" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1 0 0 0 0" />
+        <feComponentTransfer result="mask-r" color-interpolation-filters="sRGB">
           <feFuncA type="discrete" tableValues="0 1"/>
         </feComponentTransfer>
-        <feComposite result="mask-flip" in="f-flip" in2="mask" operator="out" k1="1" k2="0" k3="0" k4="0"/>
-        <feMerge result="troughs">
-          <feMergeNode in="mask"/>
-          <feMergeNode in="mask-flip"/>
+        <feComposite result="mask-r-flip" in="r-flip" in2="mask-r" operator="out" k1="1" k2="0" k3="0" k4="0"/>
+        <feMerge result="troughs-r">
+          <feMergeNode in="mask-r"/>
+          <feMergeNode in="mask-r-flip"/>
         </feMerge>
 
-        <feColorMatrix in="mask" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
-        <feConvolveMatrix result="edges" kernelMatrix="3 0 -3 10 0 -10 3 0 -3" kernelUnitLength="1" edgeMode="duplicate" preserveAlpha="false"
+        <feColorMatrix in="mask-r" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+        <feConvolveMatrix result="edges-r" kernelMatrix="3 0 -3 10 0 -10 3 0 -3" kernelUnitLength="1" edgeMode="duplicate" preserveAlpha="false"
         order="3" divisor="1" targetX="1" targetY="1" bias="0" color-interpolation-filters="sRGB"/>
 
         <feGaussianBlur stdDeviation="20" />
         <feComponentTransfer color-interpolation-filters="sRGB">
           <feFuncA type="discrete" tableValues="1 1"/>
         </feComponentTransfer>
-        <feColorMatrix result="region" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 1 0 0 0" />
-        <feGaussianBlur result="region" stdDeviation="10" />
+        <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 1 0 0 0" />
+        <feGaussianBlur result="region-r" stdDeviation="10" />
 
-        <feComposite in="troughs" in2="region" operator="out" k1="1" k2="0" k3="0" k4="0"/>
+        <feComposite in="troughs-r" in2="region-r" operator="out" k1="1" k2="0" k3="0" k4="0"/>
         <feComponentTransfer result="divergence-base" color-interpolation-filters="sRGB">
             <feFuncR type="gamma" amplitude="2" exponent="5" offset="0"/>
         </feComponentTransfer>
 
         <feFlood result="bg" flood-color="#800"/>
 
-        <feMerge>
+        <feMerge result="divergence-r">
           <feMergeNode in="bg"/>
           <feMergeNode in="divergence-base"/>
         </feMerge>
-
 
       </filter>
 
@@ -443,7 +413,8 @@
     </defs>
 
     <!-- <use xlink:href="#pane" x="0" y="0" /> -->
-    <rect x="0" y="0" width="1200" height="600" fill="#CC0F16" filter="url(#noise-test-f)" />
+    <!-- <rect x="0" y="0" width="1200" height="600" fill="#CC0F16" filter="url(#troughs-ew)" /> -->
+    <use xlink:href="#pane-motion" x="0" y="0" filter="url(#troughs-ew)"/>
 
     <!-- <g filter="url(#color)">
       <g filter="url(#drift)">
@@ -451,7 +422,6 @@
       </g>
     </g> -->
 
-    <!-- <use xlink:href="#pane-motion" x="0" y="0" /> -->
     <!-- <use xlink:href="#pane-cracks" x="0" y="0" /> -->
     <!-- <use xlink:href="#pane-divergence" x="0" y="0" /> -->
     <!-- <use xlink:href="#pane-convergence" x="0" y="0" /> -->
